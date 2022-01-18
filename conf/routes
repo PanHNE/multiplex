@@ -1,1 +1,5 @@
 GET     /                           controllers.HomeController.index
+
+POST    /film/add                   controllers.FilmController.add
+GET     /films                      controllers.FilmController.list
+GET     /film/:id                   controllers.FilmController.find(id: Long)
