@@ -31,11 +31,11 @@ class ScreeningController @Inject()(screeningService: ScreeningService, cc: Cont
 
   def find(id: Long): Action[AnyContent] = Action.async { implicit request =>
     screeningService.find(id).map {
-      case Left(value) =>
-        NotFound(value)
-
       case Right(screening) =>
         Ok(Json.toJson(screening))
+
+      case Left(error) =>
+        NotFound(error.error)
     }
   }
 }

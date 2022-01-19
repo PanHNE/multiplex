@@ -31,11 +31,11 @@ class RoomController @Inject()(roomService: RoomService, cc: ControllerComponent
 
   def find(id: Long): Action[AnyContent] = Action.async { implicit request =>
     roomService.find(id).map {
-      case Some(room) =>
+      case Right(room) =>
         Ok(Json.toJson(room))
 
-      case None =>
-        NotFound(s"Room with id=$id not found")
+      case Left(error) =>
+        NotFound(error.error)
     }
   }
 }

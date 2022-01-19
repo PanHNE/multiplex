@@ -3,6 +3,7 @@ package services
 import daos.ScreeningDAO
 import forms.ScreeningForm
 import models.Screening
+import services.Service.NotFound
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
@@ -31,12 +32,12 @@ class ScreeningServiceImpl @Inject()(
   override def create(screenings: Seq[ScreeningForm]): Future[Unit] =
     Future(screenings.foreach( screening => create(screening)))
 
-  override def find(id: Long): Future[Either[String, Screening]] =
+  override def find(id: Long): Future[Either[NotFound, Screening]] =
     for {
       screening <- screeningDAO.find(id)
     } yield screening match {
       case Some(value) => Right(value)
-      case None => Left(s"Not found screening with id ${id}")
+      case None => Left(NotFound(s"Not found screening with id ${id}"))
     }
 
   override def list(): Future[Seq[Screening]] =

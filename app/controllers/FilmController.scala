@@ -4,7 +4,6 @@ import forms.FilmForm
 import play.api.libs.json.Json
 import play.api.mvc.{AbstractController, Action, AnyContent, ControllerComponents}
 import services.FilmService
-
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -31,11 +30,11 @@ class FilmController @Inject()(filmService: FilmService, cc: ControllerComponent
 
   def find(id: Long): Action[AnyContent] = Action.async { implicit request =>
     filmService.find(id).map {
-      case Some(film) =>
+      case Right(film) =>
         Ok(Json.toJson(film))
 
-      case None =>
-        NotFound(s"Film with id=$id not found")
+      case Left(value) =>
+        NotFound(value.error)
     }
   }
 }
