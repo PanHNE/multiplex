@@ -3,3 +3,7 @@ GET     /                           controllers.HomeController.index
 POST    /film/add                   controllers.FilmController.add
 GET     /films                      controllers.FilmController.list
 GET     /film/:id                   controllers.FilmController.find(id: Long)
+
+POST    /room/add                   controllers.RoomController.add
+GET     /rooms                      controllers.RoomController.list
+GET     /room/:id                   controllers.RoomController.find(id: Long)

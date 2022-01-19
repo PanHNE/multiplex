@@ -1,7 +1,7 @@
 package bootstrap
 
-import forms.FilmForm
-import services.FilmService
+import forms.{FilmForm, RoomForm}
+import services.{FilmService, RoomService}
 
 import javax.inject.Inject
 import scala.concurrent.duration.Duration
@@ -9,12 +9,14 @@ import scala.concurrent.{Await, ExecutionContext}
 import scala.util.Try
 
 private[bootstrap] class InitialData @Inject() (
-  filmService: FilmService
+  filmService: FilmService,
+  roomService: RoomService
 )(implicit executionContext: ExecutionContext) {
 
   def insertInitialData(): Try[Unit] = {
     val insertInitialDataFuture = for {
-      count <- filmService.count() if count == 0
+      count <- roomService.count() if count == 0
+      _ <- roomService.create(InitialData.rooms)
       _ <- filmService.create(InitialData.films)
       } yield ()
 
@@ -25,6 +27,13 @@ private[bootstrap] class InitialData @Inject() (
 }
 
 private[bootstrap] object InitialData {
+  private def rooms = Seq(
+    RoomForm(10, 10),
+    RoomForm(10, 20),
+    RoomForm(20, 20),
+    RoomForm(10, 20)
+  )
+
   private def films = Seq(
     FilmForm("Inception", 148),
     FilmForm("Sherlock Holmes", 128),
@@ -32,5 +41,7 @@ private[bootstrap] object InitialData {
     FilmForm("MATRIX", 148),
     FilmForm("AVENGERS", 142)
   )
+
+
 }
 
