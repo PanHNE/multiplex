@@ -17,15 +17,15 @@ class ScreeningServiceImpl @Inject()(
   override def count(): Future[Int] =
     screeningDAO.count()
 
-  override def create(screening: ScreeningForm): Future[Unit] = {
-    for {
-      optRoom <- roomService.find(screening.roomId)
-      optFilm <- filmService.find(screening.filmId)
-    } yield for {
-      roomId <- optRoom.map(_.id)
-      filmId <- optFilm.map(_.id)
-    } yield {
-      screeningDAO.insert(Screening(None, roomId, filmId, screening.dateAndTime))
+  override def create(screening: ScreeningForm): Future[Either[ServiceError, Screening]] = {
+    roomService.find(screening.roomId) flatMap { optRoom =>
+      filmService.find(screening.filmId) flatMap { optFilm =>
+        (optRoom, optFilm) match {
+          case (Right(room), Right(film)) => screeningDAO.insert(Screening(None, room.id, film.id, screening.dateAndTime))
+          case (Left(err), _) => Future.successful(Left(err))
+          case (_, Left(err)) => Future(Left(err))
+        }
+      }
     }
   }
 

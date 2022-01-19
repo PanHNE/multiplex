@@ -1,9 +1,10 @@
 package daos
 
-import forms.ScreeningForm
 import models.Screening
 import play.api.db.slick.DatabaseConfigProvider
+import services.Service.NotAddNewElement
 import slick.jdbc.JdbcProfile
+
 import java.sql.Timestamp
 import java.time.LocalDateTime
 import javax.inject.Inject
@@ -36,8 +37,13 @@ class ScreeningDAOImpl @Inject()(dbConfigProvider: DatabaseConfigProvider)(impli
     screenings.length.result
   }
 
-  override def insert(screening: Screening): Future[Unit] =
-    db.run(screenings += screening).map( _ => () )
+  override def insert(screening: Screening): Future[Either[NotAddNewElement, Screening]] = {
+    val r = db.run(screenings += screening)
+    r.flatMap( n => find(n).map {
+      case Some(value) => Right(value)
+      case None => Left(NotAddNewElement("Adding new screening fail"))
+    })
+  }
 
   override def find(id: Long): Future[Option[Screening]] = db.run {
     screenings.filter(_.id === id).result.headOption

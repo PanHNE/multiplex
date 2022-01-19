@@ -8,7 +8,7 @@ import scala.concurrent.Future
 
 trait ScreeningService {
   def count(): Future[Int]
-  def create(screening: ScreeningForm): Future[Unit]
+  def create(screening: ScreeningForm): Future[Either[ServiceError, Screening]]
   def create(screenings: Seq[ScreeningForm]): Future[Unit]
   def find(id: Long): Future[Either[NotFound, Screening]]
   def list(): Future[Seq[Screening]]
