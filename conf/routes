@@ -7,3 +7,7 @@ GET     /film/:id                   controllers.FilmController.find(id: Long)
 POST    /room/add                   controllers.RoomController.add
 GET     /rooms                      controllers.RoomController.list
 GET     /room/:id                   controllers.RoomController.find(id: Long)
+
+POST    /screening/add              controllers.ScreeningController.add
+GET     /screenings                 controllers.ScreeningController.list
+GET     /screening/:id              controllers.ScreeningController.find(id: Long)

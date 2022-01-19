@@ -1,6 +1,6 @@
 import com.google.inject.AbstractModule
-import daos.{FilmDAO, FilmDAOImpl, RoomDAO, RoomDAOImpl}
-import services.{FilmService, FilmServiceImpl, RoomService, RoomServiceImpl}
+import daos.{FilmDAO, FilmDAOImpl, RoomDAO, RoomDAOImpl, ScreeningDAO, ScreeningDAOImpl}
+import services.{FilmService, FilmServiceImpl, RoomService, RoomServiceImpl, ScreeningService, ScreeningServiceImpl}
 
 class Module extends AbstractModule {
 
@@ -9,5 +9,7 @@ class Module extends AbstractModule {
     bind(classOf[FilmService]).to(classOf[FilmServiceImpl])
     bind(classOf[RoomDAO]).to(classOf[RoomDAOImpl])
     bind(classOf[RoomService]).to(classOf[RoomServiceImpl])
+    bind(classOf[ScreeningDAO]).to(classOf[ScreeningDAOImpl])
+    bind(classOf[ScreeningService]).to(classOf[ScreeningServiceImpl])
   }
 }
