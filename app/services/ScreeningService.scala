@@ -1,7 +1,7 @@
 package services
 
-import forms.ScreeningForm
-import models.Screening
+import forms.{ScreeningByDaysAndHours, ScreeningForm}
+import models.{FilmScreeningData, Screening}
 import services.Service.NotFound
 
 import scala.concurrent.Future
@@ -12,4 +12,6 @@ trait ScreeningService {
   def create(screenings: Seq[ScreeningForm]): Future[Unit]
   def find(id: Long): Future[Either[NotFound, Screening]]
   def list(): Future[Seq[Screening]]
+  def list(screeningByDateAndTimeForm: ScreeningByDaysAndHours): Future[Seq[Screening]]
+  def listOfFilms(date: ScreeningByDaysAndHours): Future[Seq[FilmScreeningData]]
 }

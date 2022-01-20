@@ -43,4 +43,8 @@ class FilmDAOImpl @Inject()(dbConfigProvider: DatabaseConfigProvider)(implicit e
   override def list(): Future[Seq[Film]] = db.run {
     films.result
   }
+
+  override def list(ids: Seq[Long]): Future[Seq[Film]] = db.run {
+    films.filter(_.id inSet ids).result
+  }
 }

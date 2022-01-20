@@ -28,4 +28,6 @@ class FilmServiceImpl @Inject()(filmDAO: FilmDAO)(implicit context: ExecutionCon
   override def list(): Future[Seq[Film]] =
     filmDAO.list()
 
+  override def findByIds(ids: Seq[Long]): Future[Seq[Film]] =
+    filmDAO.list(ids)
 }

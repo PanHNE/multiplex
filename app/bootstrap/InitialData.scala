@@ -1,10 +1,7 @@
 package bootstrap
 
-import bootstrap.InitialData.screenings
 import forms.{FilmForm, RoomForm, ScreeningForm}
 import services.{FilmService, RoomService, ScreeningService}
-
-import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import javax.inject.Inject
 import scala.concurrent.duration.Duration
@@ -50,18 +47,15 @@ private[bootstrap] object InitialData {
   private def screenings = Seq(
     ScreeningForm(1, 1, LocalDateTime.of(2022, 2, 1, 14,30)),
     ScreeningForm(1, 1, LocalDateTime.of(2022, 2, 1, 18,0)),
-    ScreeningForm(1, 1, LocalDateTime.of(2022, 2, 1, 21,0)),
     ScreeningForm(2, 2, LocalDateTime.of(2022, 2, 1, 14,30)),
     ScreeningForm(2, 2, LocalDateTime.of(2022, 2, 1, 18,0)),
-    ScreeningForm(2, 2, LocalDateTime.of(2022, 2, 1, 21,0)),
     ScreeningForm(3, 4, LocalDateTime.of(2022, 2, 1, 14,30)),
     ScreeningForm(3, 4, LocalDateTime.of(2022, 2, 1, 18,0)),
-    ScreeningForm(3, 4, LocalDateTime.of(2022, 2, 1, 21,0)),
-    ScreeningForm(4, 5, LocalDateTime.of(2022, 2, 1, 14,30)),
-    ScreeningForm(4, 5, LocalDateTime.of(2022, 2, 1, 18,0)),
-    ScreeningForm(4, 5, LocalDateTime.of(2022, 2, 1, 21,0))
+    ScreeningForm(4, 3, LocalDateTime.of(2022, 2, 1, 21,0)),
+    ScreeningForm(4, 5, LocalDateTime.of(2022, 2, 2, 14,30)),
+    ScreeningForm(4, 5, LocalDateTime.of(2022, 2, 2, 18,0)),
+    ScreeningForm(4, 5, LocalDateTime.of(2022, 2, 2, 21,0)),
+    ScreeningForm(4, 1, LocalDateTime.of(2021, 2, 1, 21,0))
   )
 
-
 }
-

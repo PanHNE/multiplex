@@ -11,3 +11,4 @@ GET     /room/:id                   controllers.RoomController.find(id: Long)
 POST    /screening/add              controllers.ScreeningController.add
 GET     /screenings                 controllers.ScreeningController.list
 GET     /screening/:id              controllers.ScreeningController.find(id: Long)
+POST    /screenings/byDaysAndHours  controllers.ScreeningController.findByDaysAndHours

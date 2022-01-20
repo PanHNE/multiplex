@@ -1,10 +1,11 @@
 package services
 
 import daos.ScreeningDAO
-import forms.ScreeningForm
-import models.Screening
+import forms.{ScreeningByDaysAndHours, ScreeningForm}
+import models.{FilmScreeningData, Screening}
 import services.Service.NotFound
 
+import java.time.{LocalDate, LocalDateTime, LocalTime}
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -40,6 +41,46 @@ class ScreeningServiceImpl @Inject()(
       case None => Left(NotFound(s"Not found screening with id ${id}"))
     }
 
+  override def listOfFilms(date: ScreeningByDaysAndHours): Future[Seq[FilmScreeningData]] = {
+    (for {
+      screenings <- list(date)
+    } yield for {
+      films <- filmService.findByIds(screenings.map(_.filmId))
+    } yield {
+      FilmScreeningData.sort(FilmScreeningData.zipFilmWithScreening(films, screenings))
+    }).flatten
+  }
+
   override def list(): Future[Seq[Screening]] =
-    screeningDAO.list()
+    screeningDAO.list().map(_.filter(data => data.dateAndTime.isEqual(LocalDateTime.now()) || data.dateAndTime.isAfter(LocalDateTime.now())))
+
+  override def list(data: ScreeningByDaysAndHours): Future[Seq[Screening]] = {
+    (data.days, data.hours) match {
+      case (days, hours) if days.nonEmpty && hours.nonEmpty => list(days, hours)
+      case (days, _) if days.nonEmpty => listByDays(days)
+      case (_, hours) if hours.nonEmpty => listByHours(hours)
+      case _ => list()
+    }
+  }
+
+  private def listByHours(hours: List[LocalTime]): Future[Seq[Screening]] = {
+    list().map { list =>
+      list.filter( screenings => hours.contains(screenings.dateAndTime.toLocalTime))
+    }
+  }
+
+  private def listByDays(days: List[LocalDate]): Future[Seq[Screening]] = {
+    list().map { list =>
+      list.filter( screenings => days.contains(screenings.dateAndTime.toLocalDate))
+    }
+  }
+
+  private def list(days: List[LocalDate], hours: List[LocalTime]): Future[Seq[Screening]] = {
+    list().map { list =>
+      list.filter { screening =>
+        days.contains(screening.dateAndTime.toLocalDate) && hours.contains(screening.dateAndTime.toLocalTime)
+      }
+    }
+  }
+
 }

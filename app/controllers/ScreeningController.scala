@@ -1,6 +1,6 @@
 package controllers
 
-import forms.ScreeningForm
+import forms.{ScreeningByDaysAndHours, ScreeningForm}
 import play.api.libs.json.Json
 import play.api.mvc.{AbstractController, Action, AnyContent, ControllerComponents}
 import services.{ScreeningService, Service}
@@ -43,5 +43,17 @@ class ScreeningController @Inject()(screeningService: ScreeningService, cc: Cont
       case Left(error) =>
         NotFound(error.error)
     }
+  }
+
+  def findByDaysAndHours: Action[AnyContent] = Action.async { implicit request =>
+    ScreeningByDaysAndHours.form.bindFromRequest.fold(
+      _ =>
+        Future.successful(BadRequest),
+
+      data =>
+        screeningService.listOfFilms(data).map { ps =>
+          Ok(Json.toJson(ps))
+        }
+    )
   }
 }
