@@ -15,3 +15,5 @@ POST    /screenings/byDaysAndHours    controllers.ScreeningController.findByDays
 GET     /screening/:id/info           controllers.ScreeningController.infoAboutSeatRoomAndScreening(id: Long)
 
 GET     /seats                        controllers.SeatController.availableSets(screeningId: Long, available: Boolean)
+
+POST    /reservation                  controllers.ReservationController.reservation

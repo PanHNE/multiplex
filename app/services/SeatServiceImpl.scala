@@ -21,4 +21,15 @@ class SeatServiceImpl @Inject()(seatDAO: SeatDAO)(implicit context: ExecutionCon
   override def create(seats: Seq[Seat]): Future[Unit] =
     seatDAO.create(seats)
 
+  override def find(seatId: Long): Future[Either[NotFound, Seat]] =
+    seatDAO.find(seatId).map {
+      case Some(seat) => Right(seat)
+      case None => Left(NotFound("Seat with id not found"))
+    }
+
+  override def findSeats(seatIds: Seq[Long]): Future[Either[NotFound, Seq[Seat]]] =
+    seatDAO.findSeats(seatIds).map {
+      case seat if seat.nonEmpty => Right(seat)
+      case _ => Left(NotFound("Seats not found"))
+    }
 }

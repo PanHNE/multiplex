@@ -13,5 +13,9 @@ class Module extends AbstractModule {
     bind(classOf[ScreeningService]).to(classOf[ScreeningServiceImpl])
     bind(classOf[SeatDAO]).to(classOf[SeatDAOImpl])
     bind(classOf[SeatService]).to(classOf[SeatServiceImpl])
+    bind(classOf[ReservationDAO]).to(classOf[ReservationDAOImpl])
+    bind(classOf[ReservationService]).to(classOf[ReservationServiceImpl])
+    bind(classOf[TicketDAO]).to(classOf[TicketDAOImpl])
+    bind(classOf[TicketService]).to(classOf[TicketServiceImpl])
   }
 }

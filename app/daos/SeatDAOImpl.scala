@@ -1,7 +1,6 @@
 package daos
 
-import forms.FilmForm
-import models.{Film, Seat}
+import models.Seat
 import play.api.db.slick.DatabaseConfigProvider
 import slick.jdbc.JdbcProfile
 
@@ -37,4 +36,10 @@ class SeatDAOImpl @Inject()(dbConfigProvider: DatabaseConfigProvider)(implicit e
 
   override def create(seat: Seq[Seat]): Future[Unit] =
     db.run(seats ++= seat).map( _ => ())
+
+  override def find(seatId: Long): Future[Option[Seat]] =
+    db.run( seats.filter(_.id === seatId).result.headOption)
+
+  override def findSeats(seatIds: Seq[Long]): Future[Seq[Seat]] =
+    db.run( seats.filter(_.id inSet seatIds).result)
 }
