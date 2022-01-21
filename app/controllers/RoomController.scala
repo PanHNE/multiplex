@@ -35,7 +35,7 @@ class RoomController @Inject()(roomService: RoomService, cc: ControllerComponent
         Ok(Json.toJson(room))
 
       case Left(error) =>
-        NotFound(error.error)
+        NotFound(error.message)
     }
   }
 }

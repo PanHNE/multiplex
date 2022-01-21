@@ -21,8 +21,11 @@ class ScreeningController @Inject()(screeningService: ScreeningService, cc: Cont
             Ok(Json.toJson(screening))
 
           case Left(error) => error match {
-            case Service.NotFound(error) => NotFound(error)
-            case Service.NotAddNewElement(error) => BadRequest(error)
+            case Service.NotFound(error) =>
+              NotFound(error)
+
+            case Service.NotAddNewElement(error) =>
+              BadRequest(error)
           }
         }
       }
@@ -41,7 +44,7 @@ class ScreeningController @Inject()(screeningService: ScreeningService, cc: Cont
         Ok(Json.toJson(screening))
 
       case Left(error) =>
-        NotFound(error.error)
+        NotFound(error.message)
     }
   }
 
@@ -55,5 +58,15 @@ class ScreeningController @Inject()(screeningService: ScreeningService, cc: Cont
           Ok(Json.toJson(ps))
         }
     )
+  }
+
+  def infoAboutSeatRoomAndScreening(screeningId: Long): Action[AnyContent] = Action.async { implicit request =>
+    screeningService.allInfo(screeningId).map {
+      case Right(info) =>
+        Ok(Json.toJson(info))
+
+      case Left(error) =>
+        NotFound(error.message)
+      }
   }
 }

@@ -1,16 +1,17 @@
-GET     /                           controllers.HomeController.index
+GET     /                             controllers.HomeController.index
 
-POST    /film/add                   controllers.FilmController.add
-GET     /films                      controllers.FilmController.list
-GET     /film/:id                   controllers.FilmController.find(id: Long)
+POST    /film/add                     controllers.FilmController.add
+GET     /films                        controllers.FilmController.list
+GET     /film/:id                     controllers.FilmController.find(id: Long)
 
-POST    /room/add                   controllers.RoomController.add
-GET     /rooms                      controllers.RoomController.list
-GET     /room/:id                   controllers.RoomController.find(id: Long)
+POST    /room/add                     controllers.RoomController.add
+GET     /rooms                        controllers.RoomController.list
+GET     /room/:id                     controllers.RoomController.find(id: Long)
 
-POST    /screening/add              controllers.ScreeningController.add
-GET     /screenings                 controllers.ScreeningController.list
-GET     /screening/:id              controllers.ScreeningController.find(id: Long)
-POST    /screenings/byDaysAndHours  controllers.ScreeningController.findByDaysAndHours
+POST    /screening/add                controllers.ScreeningController.add
+GET     /screenings                   controllers.ScreeningController.list
+GET     /screening/:id                controllers.ScreeningController.find(id: Long)
+POST    /screenings/byDaysAndHours    controllers.ScreeningController.findByDaysAndHours
+GET     /screening/:id/info           controllers.ScreeningController.infoAboutSeatRoomAndScreening(id: Long)
 
-GET     /seats                      controllers.SeatController.availableSets(screeningId: Long, available: Boolean)
+GET     /seats                        controllers.SeatController.availableSets(screeningId: Long, available: Boolean)

@@ -35,7 +35,7 @@ class FilmController @Inject()(filmService: FilmService, cc: ControllerComponent
         Ok(Json.toJson(film))
 
       case Left(value) =>
-        NotFound(value.error)
+        NotFound(value.message)
     }
   }
 }

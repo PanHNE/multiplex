@@ -2,7 +2,7 @@ package services
 
 import daos.ScreeningDAO
 import forms.{ScreeningByDaysAndHours, ScreeningForm}
-import models.{FilmScreeningData, Screening}
+import models.{FilmScreeningData, RoomSeatScreeningData, Screening}
 import services.Service.NotFound
 
 import java.time.{LocalDate, LocalDateTime, LocalTime}
@@ -12,7 +12,8 @@ import scala.concurrent.{ExecutionContext, Future}
 class ScreeningServiceImpl @Inject()(
   screeningDAO: ScreeningDAO,
   roomService: RoomService,
-  filmService: FilmService
+  filmService: FilmService,
+  seatService: SeatService
 )(implicit context: ExecutionContext) extends ScreeningService {
 
   override def count(): Future[Int] =
@@ -24,7 +25,7 @@ class ScreeningServiceImpl @Inject()(
         (optRoom, optFilm) match {
           case (Right(room), Right(film)) => screeningDAO.insert(Screening(None, room.id, film.id, screening.dateAndTime))
           case (Left(err), _) => Future.successful(Left(err))
-          case (_, Left(err)) => Future(Left(err))
+          case (_, Left(err)) => Future.successful(Left(err))
         }
       }
     }
@@ -60,6 +61,20 @@ class ScreeningServiceImpl @Inject()(
       case (days, _) if days.nonEmpty => listByDays(days)
       case (_, hours) if hours.nonEmpty => listByHours(hours)
       case _ => list()
+    }
+  }
+
+  override def allInfo(id: Long): Future[Either[NotFound, RoomSeatScreeningData]] = {
+    find(id).flatMap {
+      case Left(error) => Future.successful(Left(error))
+      case Right(screening) => for {
+        room <- roomService.find(screening.roomId)
+        seats <- seatService.available(id, available = true)
+      } yield (room, seats) match {
+        case (Right(room), Right(seats)) => Right(RoomSeatScreeningData(room, screening, seats))
+        case (Left(err), _) => Left(err)
+        case (_, Left(err)) => Left(err)
+      }
     }
   }
 
