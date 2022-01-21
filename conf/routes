@@ -12,3 +12,5 @@ POST    /screening/add              controllers.ScreeningController.add
 GET     /screenings                 controllers.ScreeningController.list
 GET     /screening/:id              controllers.ScreeningController.find(id: Long)
 POST    /screenings/byDaysAndHours  controllers.ScreeningController.findByDaysAndHours
+
+GET     /seats                      controllers.SeatController.availableSets(screeningId: Long, available: Boolean)

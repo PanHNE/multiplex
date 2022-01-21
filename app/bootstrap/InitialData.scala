@@ -1,7 +1,9 @@
 package bootstrap
 
 import forms.{FilmForm, RoomForm, ScreeningForm}
-import services.{FilmService, RoomService, ScreeningService}
+import models.Seat
+import services.{FilmService, RoomService, ScreeningService, SeatService}
+
 import java.time.LocalDateTime
 import javax.inject.Inject
 import scala.concurrent.duration.Duration
@@ -11,7 +13,8 @@ import scala.util.Try
 private[bootstrap] class InitialData @Inject() (
   filmService: FilmService,
   roomService: RoomService,
-  screeningService: ScreeningService
+  screeningService: ScreeningService,
+  seatService: SeatService
 )(implicit executionContext: ExecutionContext) {
 
   def insertInitialData(): Try[Unit] = {
@@ -20,6 +23,7 @@ private[bootstrap] class InitialData @Inject() (
       _ <- roomService.create(InitialData.rooms)
       _ <- filmService.create(InitialData.films)
       _ <- screeningService.create(InitialData.screenings)
+      _ <- seatService.create(InitialData.seats)
       } yield ()
 
     Try(Await.result(insertInitialDataFuture, Duration.Inf))
@@ -29,11 +33,8 @@ private[bootstrap] class InitialData @Inject() (
 }
 
 private[bootstrap] object InitialData {
-  private def rooms = Seq(
-    RoomForm(10, 10),
-    RoomForm(10, 20),
+  private def rooms = (1 to 5).map( _ =>
     RoomForm(20, 20),
-    RoomForm(10, 20)
   )
 
   private def films = Seq(
@@ -57,5 +58,11 @@ private[bootstrap] object InitialData {
     ScreeningForm(4, 5, LocalDateTime.of(2022, 2, 2, 21,0)),
     ScreeningForm(4, 1, LocalDateTime.of(2021, 2, 1, 21,0))
   )
+
+  private def seats = for {
+      screeningId <- 1 to screenings.length
+      row <- 1 to 20
+      numberOfSeat <- 1 to 20
+    } yield Seat(None, screeningId, row, numberOfSeat, available = true)
 
 }

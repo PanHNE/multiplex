@@ -10,4 +10,10 @@ object Enumerations extends Enumeration {
     LocalTime.of(21, 0)
   )
 
+  val tickets = Map(
+    "adult" -> 2500,
+    "student" -> 1800,
+    "child" -> 1250
+  )
+
 }

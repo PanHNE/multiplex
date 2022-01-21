@@ -37,13 +37,11 @@ class ScreeningDAOImpl @Inject()(dbConfigProvider: DatabaseConfigProvider)(impli
     screenings.length.result
   }
 
-  override def insert(screening: Screening): Future[Either[NotAddNewElement, Screening]] = {
-    val r = db.run(screenings += screening)
-    r.flatMap( n => find(n).map {
-      case Some(value) => Right(value)
-      case None => Left(NotAddNewElement("Adding new screening fail"))
-    })
-  }
+  override def insert(screening: Screening): Future[Either[NotAddNewElement, Screening]] =
+    db.run(screenings += screening).map {
+      case 1 => Right(screening)
+      case _ => Left(NotAddNewElement("Adding new screening fail"))
+    }
 
   override def find(id: Long): Future[Option[Screening]] = db.run {
     screenings.filter(_.id === id).result.headOption
