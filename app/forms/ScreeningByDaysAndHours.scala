@@ -3,7 +3,7 @@ package forms
 import play.api.data.Form
 import play.api.data.Forms.{list, localDate, localTime, mapping}
 import play.api.libs.json.{Json, OWrites}
-import utils.Enumerations
+import utils.Helpers
 
 import java.time.{LocalDate, LocalTime}
 
@@ -20,5 +20,5 @@ object ScreeningByDaysAndHours {
   )
 
   def verifyHours(hours: List[LocalTime]): Boolean =
-    hours.forall(hours => Enumerations.hoursScreening.contains(hours))
+    hours.forall(hours => Helpers.hoursScreening.contains(hours))
 }
