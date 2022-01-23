@@ -26,6 +26,15 @@ class ReservationController  @Inject()(reservationService: ReservationService, c
 
             case Service.NotAddNewElement(message) =>
               InternalServerError(message)
+
+            case Service.SeatIsTaken(messages) =>
+              BadRequest(messages)
+
+            case Service.ToLateForReservation(messages) =>
+              BadRequest(messages)
+
+            case Service.ProblemWithService(message) =>
+              InternalServerError(message)
           }
         }
     )
