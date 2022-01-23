@@ -27,8 +27,8 @@ class ReservationServiceImpl @Inject()(
           case Left(error) =>
             Future.successful(Left(error))
 
-          case Right(_) =>
-            createReservationAndTicket(reservationForm, rSeats, sSeats)
+          case Right(s) =>
+            createReservationAndTicket(reservationForm, rSeats, sSeats, s)
         }
 
       case (Left(error), _, _) =>
@@ -53,7 +53,7 @@ class ReservationServiceImpl @Inject()(
     else Left(ToLateForReservation("Reservation time is up left"))
   }
 
-  private def createReservationAndTicket(reservationForm: ReservationForm, rSeats: Seq[Seat], sSeat: Seq[Seat]): Future[Either[ServiceError, ReservationData]] = {
+  private def createReservationAndTicket(reservationForm: ReservationForm, rSeats: Seq[Seat], sSeat: Seq[Seat], screening: Screening): Future[Either[ServiceError, ReservationData]] = {
     if (Seat.checkSeats(rSeats, sSeat)) {
       (for {
         reservation <- reservationDAO.insert(reservationForm)
@@ -62,7 +62,7 @@ class ReservationServiceImpl @Inject()(
           tickets <- ticketService.create(reservationForm.tickets, r)
           isChanged <- seatService.changeAvailable(rSeats, available = false)
         } yield {
-          if (isChanged) Right(ReservationData(r, reservation.name, reservation.surname, tickets))
+          if (isChanged) Right(ReservationData(r, reservation.name, reservation.surname, tickets, screening))
           else Left(ProblemWithService("Problem with changing available seats"))
         }
         case None => Future.successful(Left(ProblemWithService("Problem with create reservation")))

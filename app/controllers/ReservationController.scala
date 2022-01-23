@@ -4,6 +4,7 @@ import forms.ReservationForm
 import play.api.libs.json.Json
 import play.api.mvc.{AbstractController, ControllerComponents}
 import services.{ReservationService, Service}
+import utils.HelpersMethods.respond
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
@@ -18,7 +19,8 @@ class ReservationController  @Inject()(reservationService: ReservationService, c
       data =>
         reservationService.create(data).map {
           case Right(reservation) =>
-            Ok(Json.toJson(reservation))
+            val result = respond(reservation.tickets, reservation.screening)
+            Ok(Json.toJson(result))
 
           case Left(value) => value match {
             case Service.NotFound(message) =>
