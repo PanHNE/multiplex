@@ -4,7 +4,7 @@ import forms.ReservationForm
 import play.api.libs.json.Json
 import play.api.mvc.{AbstractController, ControllerComponents}
 import services.{ReservationService, Service}
-import utils.HelpersMethods.respond
+import utils.NicerResponds.respondWithAmountToPayAndReservationTime
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
@@ -19,7 +19,7 @@ class ReservationController  @Inject()(reservationService: ReservationService, c
       data =>
         reservationService.create(data).map {
           case Right(reservation) =>
-            val result = respond(reservation.tickets, reservation.screening)
+            val result = respondWithAmountToPayAndReservationTime(reservation.tickets, reservation.screening)
             Ok(Json.toJson(result))
 
           case Left(value) => value match {

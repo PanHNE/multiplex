@@ -64,12 +64,12 @@ class ScreeningServiceImpl @Inject()(
     }
   }
 
-  override def allInfo(id: Long): Future[Either[NotFound, RoomSeatScreeningData]] = {
-    find(id).flatMap {
+  override def allInfo(screeningId: Long, available: Option[Boolean]): Future[Either[NotFound, RoomSeatScreeningData]] = {
+    find(screeningId).flatMap {
       case Left(error) => Future.successful(Left(error))
       case Right(screening) => for {
         room <- roomService.find(screening.roomId)
-        seats <- seatService.findSeatsByScreeningId(id, Some(true))
+        seats <- seatService.findSeatsByScreeningId(screeningId, available)
       } yield (room, seats) match {
         case (Right(room), Right(seats)) => Right(RoomSeatScreeningData(room, screening, seats))
         case (Left(err), _) => Left(err)

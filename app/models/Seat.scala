@@ -29,7 +29,7 @@ object Seat {
 
     if (reservationSeats.forall(s => available.map(_.id).contains(s.id))) {
       val (newTaken, newAvailable) = available.partition(s => reservationSeats.contains(s))
-      val newSeatLayout = taken ++ changeAvailable(newTaken, false) ++ newAvailable
+      val newSeatLayout = taken ++ changeAvailable(newTaken, available = false) ++ newAvailable
       checkLayoutSeats(newSeatLayout)
     } else
       false

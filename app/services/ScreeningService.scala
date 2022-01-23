@@ -14,5 +14,5 @@ trait ScreeningService {
   def list(): Future[Seq[Screening]]
   def list(screeningByDateAndTimeForm: ScreeningByDaysAndHours): Future[Seq[Screening]]
   def listOfFilms(date: ScreeningByDaysAndHours): Future[Seq[FilmScreeningData]]
-  def allInfo(id: Long): Future[Either[NotFound, RoomSeatScreeningData]]
+  def allInfo(screeningId: Long, available: Option[Boolean]): Future[Either[NotFound, RoomSeatScreeningData]]
 }

@@ -4,6 +4,8 @@ import forms.{ScreeningByDaysAndHours, ScreeningForm}
 import play.api.libs.json.Json
 import play.api.mvc.{AbstractController, Action, AnyContent, ControllerComponents}
 import services.{ScreeningService, Service}
+import utils.NicerResponds
+import utils.NicerResponds.respondWithAvailableSeatsAndRoom
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
@@ -55,15 +57,18 @@ class ScreeningController @Inject()(screeningService: ScreeningService, cc: Cont
 
       data =>
         screeningService.listOfFilms(data).map { ps =>
-          Ok(Json.toJson(ps))
+          val nicerResult = NicerResponds.respondWithListFilms(ps)
+          Ok(Json.toJson(nicerResult))
         }
     )
   }
 
-  def infoAboutSeatRoomAndScreening(screeningId: Long): Action[AnyContent] = Action.async { implicit request =>
-    screeningService.allInfo(screeningId).map {
-      case Right(info) =>
-        Ok(Json.toJson(info))
+  def infoAboutSeatRoomAndScreening(screeningId: Long, available: Boolean): Action[AnyContent] = Action.async { implicit request =>
+    screeningService.allInfo(screeningId, Some(available)).map {
+      case Right(data) => {
+        val respond = respondWithAvailableSeatsAndRoom(data)
+        Ok(Json.toJson(respond))
+      }
 
       case Left(error) =>
         NotFound(error.message)
