@@ -69,7 +69,7 @@ class ScreeningServiceImpl @Inject()(
       case Left(error) => Future.successful(Left(error))
       case Right(screening) => for {
         room <- roomService.find(screening.roomId)
-        seats <- seatService.available(id, available = true)
+        seats <- seatService.findSeatsByScreeningId(id, Some(true))
       } yield (room, seats) match {
         case (Right(room), Right(seats)) => Right(RoomSeatScreeningData(room, screening, seats))
         case (Left(err), _) => Left(err)

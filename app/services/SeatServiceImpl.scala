@@ -12,11 +12,25 @@ class SeatServiceImpl @Inject()(seatDAO: SeatDAO)(implicit context: ExecutionCon
   override def count(): Future[Int] =
     seatDAO.count()
 
-  override def available(id: Long, available: Boolean): Future[Either[NotFound, Seq[Seat]]] =
-    seatDAO.available(id, available).map {
-      case seat if seat.nonEmpty => Right(seat)
-      case _ => Left(NotFound("Not found available seat"))
+  override def changeAvailable(seats: Seq[Seat], available: Boolean): Future[Boolean] = {
+    seatDAO.update(Seat.changeAvailable(seats, false)).map(s => s.forall(_ > 0))
+  }
+
+  override def findSeatsByScreeningId(screeningId: Long, available: Option[Boolean]): Future[Either[NotFound, Seq[Seat]]] = {
+    available match {
+      case Some(av) =>
+        seatDAO.available(screeningId, av).map {
+          case seat if seat.nonEmpty => Right(seat)
+          case _ => Left(NotFound(s"Not found available = $av seats"))
+        }
+
+      case None =>
+        seatDAO.allSeatFromScreening(screeningId).map {
+          case seat if seat.nonEmpty => Right(seat)
+          case _ => Left(NotFound("Not found seats"))
+        }
     }
+  }
 
   override def create(seats: Seq[Seat]): Future[Unit] =
     seatDAO.create(seats)

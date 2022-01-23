@@ -30,8 +30,18 @@ class SeatDAOImpl @Inject()(dbConfigProvider: DatabaseConfigProvider)(implicit e
     seats.length.result
   }
 
+  override def update(seqSeat: Seq[Seat]): Future[Seq[Int]] = db.run {
+    DBIO.sequence( seqSeat.map { seat =>
+      seats.filter(_.id === seat.id).update(seat)
+    })
+  }
+
   override def available(screeningId: Long, available: Boolean): Future[Seq[Seat]] = db.run {
     seats.filter(seat => seat.screeningId === screeningId && seat.available === available).result
+  }
+
+  override def allSeatFromScreening(screeningId: Long): Future[Seq[Seat]] = db.run {
+    seats.filter(seat => seat.screeningId === screeningId).result
   }
 
   override def create(seat: Seq[Seat]): Future[Unit] =
