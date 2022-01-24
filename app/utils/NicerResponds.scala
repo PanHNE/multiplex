@@ -10,7 +10,7 @@ object NicerResponds {
   def amountToPay(tickets: Seq[Ticket]): Double = {
     tickets.foldLeft(0){ (f, n) =>
       f + ticketPrice(n.ticketType)
-    } / 100
+    } / 100.0
   }
 
   def nicerDataAndTime(localDateTime: LocalDateTime): String = {

@@ -59,10 +59,16 @@ object Seat {
   }
 
   def checkLayoutRow(available: Seq[Seat], taken: Seq[Seat], lastSeat: Int): Boolean = {
+    println(available)
+    println(taken)
     available.map(_.numberSeat).forall {
       case x: Int if x == 1 => !taken.exists(_.numberSeat == 2)
       case x: Int if x == lastSeat => !taken.exists(_.numberSeat == lastSeat - 1)
-      case x: Int => !taken.exists(ns =>  ns.numberSeat == x - 1 && ns.numberSeat == x + 1)
+      case x: Int => {
+        val r = !taken.exists(_.numberSeat == x - 1) || !taken.exists(_.numberSeat == x + 1 )
+        println(x + "::" + r)
+        r
+      }
     }
   }
 }
