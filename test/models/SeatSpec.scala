@@ -74,5 +74,19 @@ class SeatSpec extends AnyFreeSpec with Matchers {
 
       Seat.checkSeats(reservationSeats, seats) should be(false)
     }
+
+    "reserved seat with number: 7 where: 1, 2, 5, 6 are taken" in {
+      val seats = createRowWithSomeSeatsTaken(Seq(1,2,5,6), numberOfSeats = 10)
+      val reservationSeats = Seq(Seat(Some(6L), 1, 1, 7, available = true))
+
+      Seat.checkSeats(reservationSeats, seats) should be(true)
+    }
+
+    "reserved seat with number: 8 where: 1, 2, 5, 6 are taken" in {
+      val seats = createRowWithSomeSeatsTaken(Seq(1,2,5,6), numberOfSeats = 10)
+      val reservationSeats = Seq(Seat(Some(7L), 1, 1, 8, available = true))
+
+      Seat.checkSeats(reservationSeats, seats) should be(false)
+    }
   }
 }
