@@ -1,9 +1,21 @@
 import com.google.inject.AbstractModule
-import java.time.Clock
+import daos._
+import services._
 
 class Module extends AbstractModule {
 
-  override def configure() = {
-    bind(classOf[Clock]).toInstance(Clock.systemDefaultZone)
+  override def configure(): Unit = {
+    bind(classOf[FilmDAO]).to(classOf[FilmDAOImpl])
+    bind(classOf[FilmService]).to(classOf[FilmServiceImpl])
+    bind(classOf[RoomDAO]).to(classOf[RoomDAOImpl])
+    bind(classOf[RoomService]).to(classOf[RoomServiceImpl])
+    bind(classOf[ScreeningDAO]).to(classOf[ScreeningDAOImpl])
+    bind(classOf[ScreeningService]).to(classOf[ScreeningServiceImpl])
+    bind(classOf[SeatDAO]).to(classOf[SeatDAOImpl])
+    bind(classOf[SeatService]).to(classOf[SeatServiceImpl])
+    bind(classOf[ReservationDAO]).to(classOf[ReservationDAOImpl])
+    bind(classOf[ReservationService]).to(classOf[ReservationServiceImpl])
+    bind(classOf[TicketDAO]).to(classOf[TicketDAOImpl])
+    bind(classOf[TicketService]).to(classOf[TicketServiceImpl])
   }
 }
