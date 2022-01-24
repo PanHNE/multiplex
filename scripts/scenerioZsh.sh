@@ -1,5 +1,9 @@
 #!/bin/zsh
 
+# Checking app
+echo
+curl --location --request GET 'http://localhost:9000/'
+
 # Add new film
 echo
 curl --location --request POST 'http://localhost:9000/film/add' \
